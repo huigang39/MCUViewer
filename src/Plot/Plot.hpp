@@ -11,6 +11,8 @@
 
 #include "ScrollingBuffer.hpp"
 #include "Variable.hpp"
+#include "module.h"
+#include "transform/fft.h"
 
 class Plot
 {
@@ -27,8 +29,14 @@ class Plot
 		displayFormat format = displayFormat::DEC;
 		std::unique_ptr<ScrollingBuffer<double>> buffer;
 		bool visible = true;
+		fft_t fft;
 
-		void addPointFromVar() { buffer->addPoint(var->getValue()); }
+		void addPointFromVar()
+		{
+			f32 val = var->getValue();
+			buffer->addPoint(val);
+			fft_exec_in(&fft, val);
+		}
 	};
 
 	enum class Type : uint8_t

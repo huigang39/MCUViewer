@@ -32,8 +32,8 @@ endif()
 if(WIN32 AND "${PLATFORM}" STREQUAL "native")
     set(LLVM_DIR "C:/msys64/mingw64/bin")
     set(CMAKE_PREFIX_PATH ${LLVM_DIR} ${CMAKE_PREFIX_PATH})
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
-    set(CMAKE_AR "C:/msys64/mingw64/bin/llvm-ar.exe")
+    # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=lld")
+    # set(CMAKE_AR "C:/msys64/mingw64/bin/llvm-ar.exe")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "ReleaseWithDbg")
@@ -106,6 +106,7 @@ if(WIN32)
     set(LIBUSB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libusb/inc/libusb-1.0)
     set(SPDLOG_WINDOWS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/spdlog/lib/windows/libspdlog.dll)
     set(GDB_WINDOWS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/GDB/windows/gdb.exe)
+    set(FFTW_WINDOWS ${CMAKE_CURRENT_SOURCE_DIR}/module/transform/lib/win/libfftw3f-3.dll)
     set(INSTALL_PATH bin)
 endif()
 
@@ -187,6 +188,7 @@ target_compile_definitions(${EXECUTABLE}
 )
 
 target_include_directories(${EXECUTABLE} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/module
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MemoryReader
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Plot
@@ -226,7 +228,7 @@ if(APPLE)
 elseif(UNIX)
     target_link_libraries(${EXECUTABLE} ${STLINK_LINUX} ${LIBUSB_LIBRARY} ${JLINK_LINUX} spdlog::spdlog pthread dl GL glfw nfd)
 elseif(WIN32)
-    target_link_libraries(${EXECUTABLE} ${GLFW3_WINDOWS} ${STLINK_WINDOWS} ${LIBUSB_WINDOWS} ${SPDLOG_WINDOWS} ${JLINK_WINDOWS} -static ssp opengl32 nfd -static-libstdc++ -static-libgcc)
+    target_link_libraries(${EXECUTABLE} ${GLFW3_WINDOWS} ${STLINK_WINDOWS} ${LIBUSB_WINDOWS} ${SPDLOG_WINDOWS} ${JLINK_WINDOWS} ${FFTW_WINDOWS} ws2_32 -static opengl32 nfd -static-libstdc++ -static-libgcc)
 endif()
 
 if(WIN32)
