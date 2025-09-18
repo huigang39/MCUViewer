@@ -60,7 +60,7 @@ void Gui::drawPlots()
 			else if (plot->getType() == Plot::Type::BAR)
 				drawPlotBar(plot);
 			else if (plot->getType() == Plot::Type::XY)
-				drawPlotXY(plot);
+				drawPlotFFT(plot);
 		}
 
 		ImPlot::EndSubplots();
@@ -197,6 +197,51 @@ void Gui::drawPlotCurve(std::shared_ptr<Plot> plot)
 		ImPlot::EndPlot();
 	}
 }
+
+void Gui::drawPlotFFT(std::shared_ptr<Plot> plot)
+{
+	auto& seriesMap = plot->getSeriesMap();
+
+	if (ImPlot::BeginPlot((plot->getName() + " (FFT)").c_str(), ImVec2(-1, -1), ImPlotFlags_NoChild))
+	{
+		ImPlot::SetupAxis(ImAxis_X1, "Frequency [Hz]", 0);
+		ImPlot::SetupAxis(ImAxis_Y1, "Magnitude", ImPlotAxisFlags_AutoFit);
+
+		for (auto& [key, serPtr] : seriesMap)
+		{
+			if (!serPtr->visible)
+				continue;
+
+			fft_t* fft = &serPtr->fft;
+			float fs = fft->cfg.fs;
+			const int N = FFT_POINT_SIZE / 2;
+
+			static std::vector<float> freqAxis(N);
+			static std::vector<float> magAxis(N);
+			for (int i = 0; i < N; i++)
+			{
+				freqAxis[i] = i * fs / FFT_POINT_SIZE;
+				magAxis[i] = fft->out.mag[i];
+			}
+
+			auto c = serPtr->var->getColor();
+			ImPlot::SetNextLineStyle(ImVec4(c.r, c.g, c.b, 1.0f));
+			ImPlot::PlotLine((key + " FFT").c_str(), freqAxis.data(), magAxis.data(), N);
+
+			float peakFreq = fft->out.max_freq;
+			float peakMag = fft->out.max_mag;
+			ImPlot::Annotation(
+				peakFreq, peakMag,
+				ImVec4(1, 0, 0, 1),
+				ImVec2(10, 10),
+				true,
+				"%s Peak: %.1f Hz", key.c_str(), peakFreq);
+		}
+
+		ImPlot::EndPlot();
+	}
+}
+
 void Gui::drawPlotBar(std::shared_ptr<Plot> plot)
 {
 	auto& seriesMap = plot->getSeriesMap();

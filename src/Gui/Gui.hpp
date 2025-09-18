@@ -109,6 +109,7 @@ class Gui
 
 	void drawPlots();
 	void drawPlotCurve(std::shared_ptr<Plot> plot);
+	void drawPlotFFT(std::shared_ptr<Plot> plot);
 	void drawPlotBar(std::shared_ptr<Plot> plot);
 	void drawPlotTable(std::shared_ptr<Plot> plot);
 	void drawPlotXY(std::shared_ptr<Plot> plot);

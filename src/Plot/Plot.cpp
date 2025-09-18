@@ -47,7 +47,7 @@ bool Plot::addSeries(Variable* var)
 	seriesMap[name] = std::make_shared<Series>();
 	seriesMap[name]->buffer = std::make_unique<ScrollingBuffer<double>>();
 	seriesMap[name]->var = var;
-	fft_cfg_t fft_cfg = {.fs = 10000};
+	fft_cfg_t fft_cfg = {.fs = 20000};
 	printf("fft init\n");
 	fft_init(&seriesMap[name]->fft, fft_cfg);
 	return true;
