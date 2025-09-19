@@ -205,7 +205,7 @@ void Gui::drawPlotFFT(std::shared_ptr<Plot> plot)
 	if (ImPlot::BeginPlot((plot->getName() + " (FFT)").c_str(), ImVec2(-1, -1), ImPlotFlags_NoChild))
 	{
 		ImPlot::SetupAxis(ImAxis_X1, "Frequency [Hz]", 0);
-		ImPlot::SetupAxis(ImAxis_Y1, "Magnitude", ImPlotAxisFlags_AutoFit);
+		ImPlot::SetupAxis(ImAxis_Y1, "Magnitude", 0);
 
 		for (auto& [key, serPtr] : seriesMap)
 		{

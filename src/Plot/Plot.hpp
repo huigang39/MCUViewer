@@ -12,7 +12,6 @@
 #include "ScrollingBuffer.hpp"
 #include "Variable.hpp"
 #include "module.h"
-#include "transform/fft.h"
 
 class Plot
 {
