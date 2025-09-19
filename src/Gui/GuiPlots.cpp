@@ -220,7 +220,7 @@ void Gui::drawPlotFFT(std::shared_ptr<Plot> plot)
 			static std::vector<float> magAxis(N);
 			for (int i = 0; i < N; i++)
 			{
-				freqAxis[i] = i * fs / FFT_POINT_SIZE;
+				freqAxis[i] = i * fs / (f32)FFT_POINT_SIZE;
 				magAxis[i] = fft->out.mag[i];
 			}
 
